@@ -1,17 +1,12 @@
-# ĐI NHẬU ONLINE 3D — SERVER CHUNG V1.3
+# ĐI NHẬU ONLINE 3D MULTIPLAYER — V1.4
 
-## Người chơi
-Chỉ nhập tên, chọn áo, bấm VÀO QUÁN NGAY. Không nhập địa chỉ server, không nhập mã phòng.
+Đã sửa trực tiếp từ ZIP V1.3 của bạn. Màn hình vào game chỉ có: **Tên nhân vật, Nam/Nữ, Trang phục, Vào chơi ngay**. Giới tính được đồng bộ qua WebSocket và thay đổi hình dáng nhân vật 3D cơ bản (tóc/váy).
 
-## Chủ game — cần thiết lập một lần
-1. Triển khai thư mục `server-node` lên Render / Railway / VPS chạy Node.js 20+ (lệnh `npm install` và `npm start`).
-2. Lấy địa chỉ HTTPS của server, đổi `https://` thành `wss://`.
-3. Trong `website-vercel/config.js`, thay `wss://THAY-BANG-SERVER-THAT.example` bằng URL WSS thực tế.
-4. Đưa **chỉ nội dung** thư mục `website-vercel` vào repository GitHub riêng; deploy Vercel Framework Other, Root Directory `./`.
-5. Người chơi truy cập URL Vercel, tự vào phòng còn chỗ. Khi QUAN-1 đủ 30 người sẽ tự chuyển QUAN-2, QUAN-3...
+## Cách triển khai
+1. Triển khai `server-node` lên Render bằng Node.js (`npm install`, `npm start`).
+2. Lấy URL HTTPS của Render, đổi `https://` thành `wss://`.
+3. Sửa duy nhất `website-vercel/config.js`, thay `wss://THAY-BANG-SERVER-THAT.example` bằng URL thật. Người chơi sẽ không thấy ô nhập URL.
+4. Đưa **nội dung bên trong** `website-vercel` lên GitHub repository MỚI (index.html phải ở thư mục gốc), deploy Vercel Framework Other, Root Directory `./`.
+5. Server hiện tự chia phòng 30 người, tổng mặc định 300 kết nối/tiến trình; không phải không giới hạn thật.
 
-## Giới hạn thực tế
-Không có giới hạn cố định 30 người cho toàn server. Mỗi phòng 3D vẫn tối đa 30 người để bảo đảm hiển thị/hiệu năng. Mặc định MAX_TOTAL=300 trên một tiến trình, chỉnh bằng biến môi trường và kiểm thử tải trước khi tăng. Người ở các phòng khác nhau không nhìn thấy nhau. Server hiện lưu trạng thái trong RAM; khởi động lại sẽ ngắt phiên chơi. Không hỗ trợ cân bằng tải nhiều instance nếu chưa có hệ thống phân phối phòng chung.
-
-## Chạy thử trên máy
-`cd server-node && npm install && npm start`; đặt URL `ws://localhost:8080` trong config.js khi thử local. Khi deploy website HTTPS phải dùng WSS.
+**Quan trọng:** Không có URL Render thật nên chưa thể kết nối server chung ngay sau khi upload ZIP. Giao diện và đồng bộ giới tính đã cập nhật, nhưng cần cấu hình server thật.

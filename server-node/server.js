@@ -22,7 +22,7 @@ wss.on('connection',(ws,req)=>{
  if(online>=MAX_TOTAL){send(ws,{type:'error',message:'Server hiện quá tải, vui lòng thử lại sau'});ws.close(1013,'server busy');return;}
  let roomId='QUAN-1', shard=1;
  while((rooms.get(roomId)?.size||0)>=MAX_ROOM){shard++;roomId='QUAN-'+shard;}
- room=rooms.get(roomId)||new Map();if(room.size>=MAX_ROOM){send(ws,{type:'error',message:'Phòng đã đủ 30 người'});ws.close(1008,'room full');return;}rooms.set(roomId,room);player={id:randomUUID(),name,room:roomId,x:0,z:11,rot:0,seat:null,color:Number.isInteger(Number(msg.color))?Math.max(0,Math.min(5,Number(msg.color))):0,ws};room.set(player.id,player);clearTimeout(timeout);send(ws,{type:'welcome',id:player.id,room:roomId,players:[...room.values()].map(publicPlayer),seats:24,max:MAX_ROOM});broadcast(room,{type:'joined',player:publicPlayer(player)},ws);broadcast(room,{type:'notice',text:`${name} vừa vào quán!`});return;}
+ room=rooms.get(roomId)||new Map();if(room.size>=MAX_ROOM){send(ws,{type:'error',message:'Phòng đã đủ 30 người'});ws.close(1008,'room full');return;}rooms.set(roomId,room);player={id:randomUUID(),name,gender:msg.gender==='female'?'female':'male',room:roomId,x:0,z:11,rot:0,seat:null,color:Number.isInteger(Number(msg.color))?Math.max(0,Math.min(5,Number(msg.color))):0,ws};room.set(player.id,player);clearTimeout(timeout);send(ws,{type:'welcome',id:player.id,room:roomId,players:[...room.values()].map(publicPlayer),seats:24,max:MAX_ROOM});broadcast(room,{type:'joined',player:publicPlayer(player)},ws);broadcast(room,{type:'notice',text:`${name} vừa vào quán!`});return;}
  if(!player)return;
  if(msg.type==='move'){if(Date.now()-lastMove<40||player.seat!==null)return;lastMove=Date.now();const x=Number(msg.x),z=Number(msg.z),rot=Number(msg.rot);if(![x,z,rot].every(Number.isFinite))return;const dx=x-player.x,dz=z-player.z;if(Math.hypot(dx,dz)>3)return;player.x=Math.max(-12,Math.min(12,x));player.z=Math.max(-10,Math.min(13,z));player.rot=rot;broadcast(room,{type:'moved',id:player.id,x:player.x,z:player.z,rot:player.rot},ws);return;}
  if(msg.type==='seat'){if(player.seat!==null){player.seat=null;broadcast(room,{type:'seated',id:player.id,seat:null});return;}const i=Number(msg.index);if(!Number.isInteger(i)||i<0||i>=24)return;if([...room.values()].some(p=>p.seat===i))return;const pos=seatPosition(i);if(Math.hypot(pos.x-player.x,pos.z-player.z)>3.5)return;player.seat=i;player.x=pos.x;player.z=pos.z;broadcast(room,{type:'seated',id:player.id,seat:i,x:pos.x,z:pos.z});return;}
@@ -33,5 +33,5 @@ wss.on('connection',(ws,req)=>{
  ws.on('close',()=>{clearTimeout(timeout);if(!player||!room)return;room.delete(player.id);broadcast(room,{type:'left',id:player.id});if(room.size===0)rooms.delete(player.room);});
  ws.on('error',()=>{});
 });
-function publicPlayer(p){return {id:p.id,name:p.name,x:p.x,z:p.z,rot:p.rot,seat:p.seat,color:p.color};}
+function publicPlayer(p){return {id:p.id,name:p.name,x:p.x,z:p.z,rot:p.rot,seat:p.seat,color:p.color,gender:p.gender};}
 server.listen(PORT,'0.0.0.0',()=>console.log(`Di Nhau Multiplayer WS on :${PORT}`));

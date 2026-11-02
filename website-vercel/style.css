@@ -3,3 +3,6 @@
 
 /* V1.2 */
 .entryCard select{width:100%;padding:13px;border-radius:11px;background:#120e11;color:#fff;border:1px solid #63453d;font:inherit}.roomNote{margin-top:14px;font-size:10px;color:#dfbc95;line-height:1.6}.bubble{position:absolute;transform:translate(-50%,-115%);background:#fff7e7;color:#38211a;border-radius:12px;padding:6px 10px;font-size:11px;max-width:190px;overflow-wrap:anywhere;box-shadow:0 4px 12px #0008;text-align:center}.bubble[hidden]{display:none!important}@media(max-width:700px){.bubble{font-size:9px;max-width:120px}#actions{gap:5px}#actions button{padding:9px}}
+
+/* V1.4 — chọn nam/nữ gọn gàng trên cả mobile */
+.genderPick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:7px 0 14px}.entryCard .genderOption{margin:0;cursor:pointer}.genderOption input{position:absolute;opacity:0;width:1px;height:1px}.genderOption span{display:block;text-align:center;padding:13px 8px;border:1px solid #63453d;border-radius:12px;background:#130f12;color:#d7b8a0;font-size:13px;font-weight:800}.genderOption input:checked+span{border-color:#ffbc68;background:#533123;color:#fff;box-shadow:0 0 0 1px #ffbc68}.genderOption input:focus-visible+span{outline:2px solid #fff;outline-offset:3px}
